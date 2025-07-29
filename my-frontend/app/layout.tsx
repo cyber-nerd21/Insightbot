@@ -5,7 +5,9 @@ export const metadata = {
   description: 'A PDF QnA and quiz generation assistant',
 };
 
-export default function RootLayout({ children }) {
+import { ReactNode } from 'react';
+
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body className="h-screen">{children}</body>

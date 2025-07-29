@@ -1,4 +1,9 @@
-export default function LandingPage({ handleStart, quickActions }) {
+type LandingPageProps = {
+  handleStart: () => void;
+  quickActions: string[];
+};
+
+export default function LandingPage({ handleStart, quickActions }: LandingPageProps) {
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <header className="w-full border-b border-gray-100">
