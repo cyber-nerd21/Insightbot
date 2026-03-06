@@ -1,3 +1,5 @@
+from dotenv import load_dotenv
+load_dotenv()
 from fastapi import FastAPI
 from routes.upload import router as upload_router
 from routes.documents import router as documents_router

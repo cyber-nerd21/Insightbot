@@ -1,5 +1,6 @@
 import uuid 
 from fastapi  import APIRouter  , UploadFile ,  File ,  HTTPException 
+from services.upload_service import upload_service
 
 router = APIRouter()    
 
@@ -24,13 +25,7 @@ async def upload_pdf (file: UploadFile = File(...)):
 
     # service call here  
 
-    #  await upload_service(file , doc_id) 
+    result = await upload_service(file , doc_id) 
 
-
-    return  {   
-
-          "doc_id" : doc_id, 
-          "file_name": file.filename,
-          "status": "uploaded" 
-    } 
+    return result 
 
