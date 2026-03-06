@@ -21,3 +21,5 @@ async def upload_service(file: UploadFile, doc_id: str):
     }).execute()
     
     return {"doc_id": doc_id, "filename": file.filename}
+
+    #upload service done
