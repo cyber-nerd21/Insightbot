@@ -1,6 +1,7 @@
 import uuid
 from fastapi import UploadFile
 from services.db import supabase
+from services.rag_service import process_document
 
 async def upload_service(file: UploadFile, doc_id: str):
     
@@ -20,5 +21,7 @@ async def upload_service(file: UploadFile, doc_id: str):
         "file_url": f"{doc_id}/{file.filename}",
     }).execute()
     
-    return {"doc_id": doc_id, "filename": file.filename}
+    await process_document(contents, doc_id)
+    
+    return {"doc_id": doc_id, "filename": file.filename, "status": "processed"}
 

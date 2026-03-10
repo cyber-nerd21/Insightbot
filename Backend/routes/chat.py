@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import List, Optional
+from services.chat_service import chat_service
 
 router = APIRouter(prefix="/chat")
 
@@ -11,15 +12,12 @@ class ChatRequest(BaseModel):
 
 @router.post("/")
 async def chat(request: ChatRequest):
-    
     if len(request.question) > 1000:
-        raise HTTPException(status_code=400, detail="Question too long max 1000 chars")
+        raise HTTPException(status_code=400, detail="Question too long")
     
-    # TODO: witty humor in system prompt
-    # TODO: precise answers max 3-4 sentences
-    # response = await chat_service(request)
-    
-    return {
-        "answer": "placeholder",
-        "sources": []
-    }
+    result = await chat_service(
+        doc_id=request.doc_id,
+        question=request.question,
+        chat_history=request.chat_history
+    )
+    return result
