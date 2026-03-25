@@ -10,7 +10,7 @@ client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 async def chat_service(doc_id: str, question: str, chat_history: list):
 
-    # Step 1 - Question embed karo
+    # Step 1 - Question embedding
     question_embedding = get_embeddings(question)
 
     # Step 2 - Vector search
@@ -22,7 +22,7 @@ async def chat_service(doc_id: str, question: str, chat_history: list):
 
     chunks = result.data
 
-    # Step 3 - Context banao
+    # Step 3 - Context creation 
     context = "\n\n".join([c["content"] for c in chunks])
     sources = [{"chunk_index": c["chunk_index"], "content": c["content"][:100]} for c in chunks]
 
