@@ -3,10 +3,7 @@ from rag.chunker import chunk_text
 from rag.embedder import get_embeddings
 from services.db import supabase
 
-
-# -----------------------------
 # DOCUMENT INGESTION PIPELINE
-# -----------------------------
 async def process_document(file_bytes: bytes, doc_id: str):
 
     # Step 1 — Parse PDF
