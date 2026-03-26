@@ -3,10 +3,7 @@ from rag.chunker import chunk_text
 from rag.embedder import get_embeddings
 from services.db import supabase
 
-
-# -----------------------------
 # DOCUMENT INGESTION PIPELINE
-# -----------------------------
 async def process_document(file_bytes: bytes, doc_id: str):
 
     # Step 1 — Parse PDF
@@ -37,9 +34,8 @@ async def process_document(file_bytes: bytes, doc_id: str):
     }
 
 
-# -----------------------------
+
 # RETRIEVAL FUNCTION (RAG)
-# -----------------------------
 async def retrieve_relevant_chunks(query: str, doc_id: str, top_k: int = 5):
 
     # Step 1 — Embed user query
