@@ -8,16 +8,18 @@ router = APIRouter(prefix="/chat")
 class ChatRequest(BaseModel):
     doc_id: str
     question: str
-    chat_history: Optional[List[dict]] = []
+    chat_history: Optional[List[dict]] = None   # ✅ fixed
 
 @router.post("/")
 async def chat(request: ChatRequest):
+    
     if len(request.question) > 1000:
         raise HTTPException(status_code=400, detail="Question too long")
-    
+
     result = await chat_service(
         doc_id=request.doc_id,
         question=request.question,
-        chat_history=request.chat_history
+        chat_history=request.chat_history or []   # ✅ safe default
     )
+
     return result
