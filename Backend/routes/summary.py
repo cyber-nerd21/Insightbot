@@ -1,35 +1,28 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import Optional
-from services.quiz_service import quiz_service
+from services.summary_service import summary_service
 
-router = APIRouter(prefix="/quiz")
+router = APIRouter(prefix="/summary")
 
-class QuizRequest(BaseModel):
+class SummaryRequest(BaseModel):
     doc_id: str
-    num_questions: int = 5
-    difficulty: Optional[str] = "medium"   # easy, medium, hard
+    summary_type: Optional[str] = "medium"  # short, medium, large, bullet, review, analysis
+    query: Optional[str] = None
 
 @router.post("/")
-async def generate_quiz(request: QuizRequest):
-    
-    if request.num_questions < 1 or request.num_questions > 20:
+async def generate_summary(request: SummaryRequest):
+
+    if request.summary_type not in ["short", "medium", "large", "bullet", "review", "analysis"]:
         raise HTTPException(
             status_code=400,
-            detail="Questions must be between 1 and 20"
+            detail="summary_type must be: short, medium, large, bullet, review, analysis"
         )
-    
-    if request.difficulty not in ["easy", "medium", "hard"]:
-        raise HTTPException(
-            status_code=400,
-            detail="Difficulty must be: easy, medium, hard"
-        )
-    
-    quiz = await quiz_service(request)
+
+    result = await summary_service(request)
 
     return {
         "doc_id": request.doc_id,
-        "num_questions": request.num_questions,
-        "difficulty": request.difficulty,
-        "quiz": quiz
+        "summary_type": request.summary_type,
+        "summary": result
     }

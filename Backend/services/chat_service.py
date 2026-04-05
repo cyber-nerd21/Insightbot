@@ -10,24 +10,34 @@ client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 async def chat_service(doc_id: str, question: str, chat_history: list):
 
-    # Step 1 - Question embedding
-    question_embedding = get_embeddings(question)
+    try:
+        # Step 1 - Question embedding
+        question_embedding = get_embeddings(question)
 
-    # Step 2 - Vector search
-    result = supabase.rpc("match_chunks", {
-        "query_embedding": question_embedding,
-        "match_document_id": doc_id,
-        "match_count": 5
-    }).execute()
+        # Step 2 - Vector search
+        result = supabase.rpc("match_chunks", {
+            "query_embedding": question_embedding,
+            "match_document_id": doc_id,
+            "match_count": 5
+        }).execute()
 
-    chunks = result.data
+        chunks = result.data or []
 
-    # Step 3 - Context creation 
-    context = "\n\n".join([c["content"] for c in chunks])
-    sources = [{"chunk_index": c["chunk_index"], "content": c["content"][:100]} for c in chunks]
+        # Step 3 - Handle empty chunks
+        if not chunks:
+            return {
+                "answer": "No relevant data found.",
+                "sources": []
+            }
 
-    # Step 4 - Gemini call
-    prompt = f"""You are InsightBot - a precise and slightly witty AI assistant.
+        context = "\n\n".join([c["content"] for c in chunks])
+        sources = [
+            {"chunk_index": c["chunk_index"], "content": c["content"][:100]}
+            for c in chunks
+        ]
+
+        # Step 4 - Gemini call
+        prompt = f"""You are InsightBot - a precise and slightly witty AI assistant.
 Answer based ONLY on the context below. Be concise - max 3-4 sentences.
 
 Context:
@@ -37,12 +47,19 @@ Question: {question}
 
 Answer:"""
 
-    response = client.models.generate_content(
-        model="gemini-2.0-flash-lite",
-        contents=prompt
-    )
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt
+        )
 
-    return {
-        "answer": response.text,
-        "sources": sources
-    }
+        return {
+            "answer": response.text if hasattr(response, "text") else "No response",
+            "sources": sources
+        }
+
+    except Exception as e:
+        print("ERROR:", str(e))
+        return {
+            "answer": "Something went wrong.",
+            "sources": []
+        }
