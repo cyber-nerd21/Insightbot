@@ -70,7 +70,7 @@ html, body {
   transition: all var(--transition);
 }
 .btn-primary { background: var(--accent); color: #fff; }
-.btn-primary:hover { background: #7c3aed; }
+.btn-primary:hover { background: #f1f0f5; }
 .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
 .btn-ghost { background: transparent; color: var(--text-secondary); border: 1px solid var(--border); }
 .btn-ghost:hover { background: var(--bg-hover); color: var(--text-primary); }
