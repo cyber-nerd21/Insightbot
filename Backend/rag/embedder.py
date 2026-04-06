@@ -10,7 +10,7 @@ client = genai.Client(
 
 def get_embeddings(text: str) -> list:
     response = client.models.embed_content(
-        model="text-embedding-004",  # ← removed "models/" prefix
+        model="gemini-embedding-exp-03-07",
         contents=text
     )
     return response.embeddings[0].values
