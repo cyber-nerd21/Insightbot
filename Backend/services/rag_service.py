@@ -3,59 +3,33 @@ from rag.chunker import chunk_text
 from rag.embedder import get_embeddings
 from services.db import supabase
 
-# DOCUMENT INGESTION PIPELINE
 async def process_document(file_bytes: bytes, doc_id: str):
-
-    # Step 1 — Parse PDF
+    # Parse
     text = parse_pdf(file_bytes)
-
-    # Step 2 — Chunk text
+    
+    # Chunk
     chunks = chunk_text(text)
-
-    rows = []
-
-    # Step 3 — Generate embeddings
+    
+    # Embed + save one at a time → memory stays low
     for index, chunk in enumerate(chunks):
         embedding = get_embeddings(chunk)
-
-        rows.append({
+        supabase.table("document_chunks").insert({
             "document_id": doc_id,
             "content": chunk,
             "embedding": embedding,
             "chunk_index": index
-        })
+        }).execute()
+        del embedding  # explicitly free memory
 
-    # Step 4 — Batch insert into Supabase
-    supabase.table("document_chunks").insert(rows).execute()
-
-    return {
-        "document_id": doc_id,
-        "chunks_processed": len(chunks)
-    }
+    return {"document_id": doc_id, "chunks_processed": len(chunks)}
 
 
-
-# RETRIEVAL FUNCTION (RAG)
 async def retrieve_relevant_chunks(query: str, doc_id: str, top_k: int = 5):
-
-    # Step 1 — Embed user query
     query_embedding = get_embeddings(query)
+    response = supabase.rpc("match_chunks", {
+        "query_embedding": query_embedding,
+        "match_count": top_k,
+        "match_document_id": doc_id
+    }).execute()
 
-    # Step 2 — Vector similarity search
-    response = supabase.rpc(
-        "match_document_chunks",
-        {
-            "query_embedding": query_embedding,
-            "match_count": top_k,
-            "doc_id": doc_id
-        }
-    ).execute()
-
-    chunks = []
-
-    if response.data:
-        for row in response.data:
-            chunks.append(row["content"])
-
-    return chunks
-
+    return [row["content"] for row in response.data] if response.data else []
