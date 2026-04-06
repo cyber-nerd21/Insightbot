@@ -6,7 +6,7 @@ load_dotenv()
 
 client = genai.Client(
     api_key=os.getenv("GEMINI_API_KEY"),
-    http_options={"api_version": "v1"}
+    http_options={"api_version": "v1beta"}
 )
 
 def get_embeddings(text: str) -> list:
