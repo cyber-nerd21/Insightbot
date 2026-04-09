@@ -70,7 +70,7 @@ html, body {
   transition: all var(--transition);
 }
 .btn-primary { background: var(--accent); color: #fff; }
-.btn-primary:hover { background: #f1f0f5; }
+.btn-primary:hover { background: #f97316; }
 .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
 .btn-ghost { background: transparent; color: var(--text-secondary); border: 1px solid var(--border); }
 .btn-ghost:hover { background: var(--bg-hover); color: var(--text-primary); }
@@ -103,9 +103,10 @@ html, body {
 
 @keyframes spin { to { transform: rotate(360deg); } }
 .spinner {
-  width: 18px; height: 18px;
-  border: 2px solid var(--border);
-  border-top-color: var(--accent);
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
   display: inline-block;
