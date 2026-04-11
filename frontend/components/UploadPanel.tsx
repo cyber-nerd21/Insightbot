@@ -17,7 +17,16 @@ export default function UploadPanel({ setDocId, setDocName, setActiveTab }: Prop
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleFile = (f: File) => {
-    if (f.type !== "application/pdf") { setError("Only PDF files are supported."); return; }
+    if (f.type !== "application/pdf") {
+      setError("Only PDF files are supported.");
+      return;
+    }
+
+    if (f.size > 15 * 1024 * 1024) {
+      setError("Please upload PDF under 15MB.");
+      return;
+    }
+
     setError(null);
     setFile(f);
   };
@@ -57,7 +66,7 @@ export default function UploadPanel({ setDocId, setDocName, setActiveTab }: Prop
       <div className="card" style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
         <div>
           <div style={{ fontSize: "13px", color: "var(--text-muted)", marginBottom: "0.5rem" }}>
-            PDF file (max 500 MB)
+            PDF file (max 15 MB)
           </div>
 
           <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
@@ -97,7 +106,8 @@ export default function UploadPanel({ setDocId, setDocName, setActiveTab }: Prop
           <a
             href="/Attention is all you need.pdf"
             target="_blank"
-            className="text-sm text-gray-300 mt-1 block hover:text-white transition"
+            rel="noopener noreferrer"
+            className="text-sm text-gray-300 mt-1 block underline cursor-pointer hover:text-white transition"
           >
             Download sample PDF (Attention is All You Need)
           </a>
