@@ -22,7 +22,7 @@ export default function UploadPanel({ setDocId, setDocName, setActiveTab }: Prop
       return;
     }
 
-    if (f.size > 15 * 1024 * 1024) {
+    if (f.size > 20 * 1024 * 1024) {
       setError("Please upload PDF under 15MB.");
       return;
     }
@@ -66,7 +66,7 @@ export default function UploadPanel({ setDocId, setDocName, setActiveTab }: Prop
       <div className="card" style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
         <div>
           <div style={{ fontSize: "13px", color: "var(--text-muted)", marginBottom: "0.5rem" }}>
-            PDF file (max 15 MB)
+            PDF file (max 20 MB)
           </div>
 
           <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
