@@ -8,7 +8,7 @@ router = APIRouter(prefix="/chat")
 class ChatRequest(BaseModel):
     doc_id: str
     question: str
-    chat_history: Optional[List[dict]] = None   # ✅ fixed
+    chat_history: Optional[List[dict]] = None   
 
 @router.post("/")
 async def chat(request: ChatRequest):
@@ -19,7 +19,7 @@ async def chat(request: ChatRequest):
     result = await chat_service(
         doc_id=request.doc_id,
         question=request.question,
-        chat_history=request.chat_history or []   # ✅ safe default
+        chat_history=request.chat_history or []   
     )
 
     return result

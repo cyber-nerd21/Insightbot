@@ -1,11 +1,11 @@
 import uuid 
 from fastapi import APIRouter, UploadFile, File, HTTPException 
 from services.upload_service import upload_service
-from services.db import supabase  # ← ADD THIS LINE
+from services.db import supabase  
 
 router = APIRouter()    
 
-MAX_SIZE = 500 * 1024 * 1024  # 500MB 
+MAX_SIZE = 20 * 1024 * 1024  
 
 @router.post("/upload") 
 async def upload_pdf(file: UploadFile = File(...)):

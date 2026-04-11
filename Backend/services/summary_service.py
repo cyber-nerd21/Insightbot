@@ -13,13 +13,13 @@ client = genai.Client(
 
 async def summary_service(request):
 
-    # 🔹 Use user query or fallback
+    
     query = request.query if hasattr(request, "query") and request.query else "Summarize this document"
 
-    # 🔹 Embed query
+
     embedding = get_embeddings(query)
 
-    # 🔹 Fetch chunks
+    
     result = supabase.rpc("match_chunks", {
         "query_embedding": embedding,
         "match_document_id": request.doc_id,
@@ -31,10 +31,10 @@ async def summary_service(request):
     if not chunks:
         return "Not enough data"
 
-    # 🔹 Build context
+    
     context = "\n\n".join([c["content"] for c in chunks])
 
-    # 🔹 Updated style map (product-level)
+    
     style_map = {
         "short": "Give a very short summary (2-3 lines max).",
 
@@ -51,7 +51,7 @@ async def summary_service(request):
 
     instruction = style_map.get(request.summary_type, "Give a concise summary.")
 
-    # 🔥 FINAL PROMPT (agent-style + strict)
+    
     prompt = f"""
 You are InsightBot — an AI agent built for intelligent document analysis.
 
@@ -89,7 +89,7 @@ Summary:
         contents=prompt
     )
 
-    # 🔹 Safe extraction
+  
     try:
         return response.text
     except:
