@@ -1,5 +1,6 @@
 "use client";
 import { ActiveTab } from "@/app/page";
+import { supabase } from "@/lib/supabase";
 
 const NAV = [
   { id: "upload",  label: "Upload & Generate Insights",  icon: "↑" },
@@ -16,30 +17,43 @@ interface Props {
 }
 
 export default function Sidebar({ activeTab, setActiveTab, docId, docName }: Props) {
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    window.location.reload();
+  };
+
   return (
     <aside style={{
       width: "var(--sidebar-w)", minWidth: "var(--sidebar-w)", height: "100vh",
       background: "var(--bg-card)", borderRight: "1px solid var(--border)",
       display: "flex", flexDirection: "column", padding: "1.5rem 0",
     }}>
-      <div style={{ padding: "0 1.25rem 1.5rem" }}>
-        <div style={{ fontFamily: "var(--font-display)", fontSize: "1.4rem", color: "var(--text-primary)", letterSpacing: "-0.02em" }}>
-          Insight<span style={{ color: "var(--accent)" }}>Bot</span>
+      <div style={{ padding: "0 1.25rem 1.5rem", display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+        <div>
+          <div style={{ fontFamily: "var(--font-display)", fontSize: "1.4rem", color: "var(--text-primary)", letterSpacing: "-0.02em" }}>
+            Insight<span style={{ color: "var(--accent)" }}>Bot</span>
+          </div>
+          <div style={{ fontSize: "11px", color: "var(--text-muted)", marginTop: "2px" }}>
+            AI Document Intelligence
+          </div>
         </div>
-        <div style={{ fontSize: "11px", color: "var(--text-muted)", marginTop: "2px" }}>
-          AI Document Intelligence
-        </div>
+        <button
+          onClick={handleSignOut}
+          style={{
+            background: "transparent", border: "1px solid var(--accent)",
+            color: "var(--accent)", fontSize: "11px", padding: "0.3rem 0.6rem",
+            borderRadius: "var(--radius-sm)", cursor: "pointer",
+          }}
+        >
+          Sign out
+        </button>
       </div>
 
       <hr style={{ border: "none", borderTop: "1px solid var(--border)", marginBottom: "1rem" }} />
 
       <nav style={{ flex: 1, padding: "0 0.75rem" }}>
         {!docId && (
-          <div style={{
-            fontSize: "11px",
-            color: "var(--text-muted)",
-            padding: "0 0.5rem 0.75rem"
-          }}>
+          <div style={{ fontSize: "11px", color: "var(--text-muted)", padding: "0 0.5rem 0.75rem" }}>
             Upload a document to unlock features
           </div>
         )}
@@ -69,9 +83,7 @@ export default function Sidebar({ activeTab, setActiveTab, docId, docName }: Pro
               <span style={{ fontSize: "16px", opacity: locked ? 0.4 : 1 }}>{item.icon}</span>
               {item.label}
               {locked && (
-                <span style={{ marginLeft: "auto", fontSize: "10px", opacity: 0.5 }}>
-                  Locked
-                </span>
+                <span style={{ marginLeft: "auto", fontSize: "10px", opacity: 0.5 }}>Locked</span>
               )}
             </button>
           );
@@ -84,15 +96,8 @@ export default function Sidebar({ activeTab, setActiveTab, docId, docName }: Pro
             background: "var(--bg-surface)", border: "1px solid var(--border)",
             borderRadius: "var(--radius-sm)", padding: "0.75rem",
           }}>
-            <div style={{ fontSize: "11px", color: "var(--text-muted)", marginBottom: "4px" }}>
-              Active document
-            </div>
-            <div style={{
-              fontSize: "12px",
-              color: "var(--accent)",
-              fontFamily: "var(--font-mono)",
-              wordBreak: "break-all"
-            }}>
+            <div style={{ fontSize: "11px", color: "var(--text-muted)", marginBottom: "4px" }}>Active document</div>
+            <div style={{ fontSize: "12px", color: "var(--accent)", fontFamily: "var(--font-mono)", wordBreak: "break-all" }}>
               {docName || docId.slice(0, 16) + "…"}
             </div>
           </div>
