@@ -11,16 +11,20 @@ import { supabase } from "@/lib/supabase";
 export type ActiveTab = "upload" | "chat" | "summary" | "quiz";
 
 export default function Home() {
-  const [showLanding, setShowLanding] = useState(true);
+  const [showLanding, setShowLanding] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<ActiveTab>("upload");
   const [docId, setDocId] = useState<string | null>(null);
   const [docName, setDocName] = useState<string | null>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) setShowLanding(false);
+      setShowLanding(!session);
+      setLoading(false);
     });
   }, []);
+
+  if (loading) return null;
 
   if (showLanding) {
     return <LandingPage onContinueWithoutAuth={() => setShowLanding(false)} />;
