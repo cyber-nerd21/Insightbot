@@ -17,24 +17,15 @@ export default function UploadPanel({ setDocId, setDocName, setActiveTab }: Prop
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleFile = (f: File) => {
-    if (f.type !== "application/pdf") {
-      setError("Only PDF files are supported.");
-      return;
-    }
-
-    if (f.size > 20 * 1024 * 1024) {
-      setError("Please upload PDF under 15MB.");
-      return;
-    }
-
+    if (f.type !== "application/pdf") { setError("Only PDF files are supported."); return; }
+    if (f.size > 20 * 1024 * 1024) { setError("Please upload PDF under 20MB."); return; }
     setError(null);
     setFile(f);
   };
 
   const upload = async () => {
     if (!file) return;
-    setLoading(true);
-    setError(null);
+    setLoading(true); setError(null);
     try {
       const fd = new FormData();
       fd.append("file", file);
@@ -55,12 +46,10 @@ export default function UploadPanel({ setDocId, setDocName, setActiveTab }: Prop
   };
 
   return (
-    <div style={{ maxWidth: 520 }}>
+    <div style={{ maxWidth: 520, width: "100%" }}>
       <div className="page-header">
         <h1 className="page-title">Upload document</h1>
-        <p className="text-lg md:text-xl text-white/90 font-medium mt-2 max-w-xl leading-relaxed">
-          Chat, summarize & generate quizzes from any PDF using AI
-        </p>
+        <p className="page-subtitle">Chat, summarize & generate quizzes from any PDF using AI</p>
       </div>
 
       <div className="card" style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
@@ -69,47 +58,34 @@ export default function UploadPanel({ setDocId, setDocName, setActiveTab }: Prop
             PDF file (max 20 MB)
           </div>
 
-          <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+          <div style={{ display: "flex", gap: "10px", alignItems: "center", flexWrap: "wrap" }}>
             <input
-              ref={inputRef}
-              type="file"
-              accept=".pdf"
+              ref={inputRef} type="file" accept=".pdf"
               style={{ display: "none" }}
               onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])}
             />
-
-            <button
-              className="btn btn-ghost"
-              onClick={() => inputRef.current?.click()}
-              style={{ whiteSpace: "nowrap" }}
-            >
+            <button className="btn btn-ghost" onClick={() => inputRef.current?.click()} style={{ whiteSpace: "nowrap" }}>
               Choose file
             </button>
-
-            <span
-              style={{
-                fontSize: "14px",
-                color: file ? "var(--text-primary)" : "var(--text-muted)",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-            >
+            <span style={{
+              fontSize: "14px",
+              color: file ? "var(--text-primary)" : "var(--text-muted)",
+              overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", flex: 1, minWidth: 0,
+            }}>
               {file ? file.name : "No file chosen"}
             </span>
           </div>
 
-          <p className="text-sm text-gray-400 mt-2">
-            Try with a sample PDF (demo)
+          <p style={{ fontSize: "13px", color: "var(--text-muted)", marginTop: "10px" }}>
+            Try with a sample PDF
           </p>
-
           <a
             href="/Attention is all you need.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm text-gray-300 mt-1 block underline cursor-pointer hover:text-white transition"
+            style={{ fontSize: "13px", color: "var(--accent)", display: "block", marginTop: "4px" }}
           >
-            Download sample PDF (Attention is All You Need)
+            Download: Attention is All You Need
           </a>
 
           {file && (
@@ -120,48 +96,24 @@ export default function UploadPanel({ setDocId, setDocName, setActiveTab }: Prop
         </div>
 
         {error && (
-          <div
-            style={{
-              background: "rgba(239,68,68,0.1)",
-              border: "1px solid rgba(239,68,68,0.25)",
-              color: "#f87171",
-              borderRadius: "var(--radius-sm)",
-              padding: "0.65rem 0.9rem",
-              fontSize: "13px",
-            }}
-          >
-            {error}
-          </div>
+          <div style={{
+            background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.25)",
+            color: "#f87171", borderRadius: "var(--radius-sm)", padding: "0.65rem 0.9rem", fontSize: "13px",
+          }}>{error}</div>
         )}
 
         {success && (
-          <div
-            style={{
-              background: "rgba(16,185,129,0.1)",
-              border: "1px solid rgba(16,185,129,0.25)",
-              color: "#34d399",
-              borderRadius: "var(--radius-sm)",
-              padding: "0.65rem 0.9rem",
-              fontSize: "13px",
-            }}
-          >
+          <div style={{
+            background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.25)",
+            color: "#34d399", borderRadius: "var(--radius-sm)", padding: "0.65rem 0.9rem", fontSize: "13px",
+          }}>
             Document processed! Redirecting to Chat…
           </div>
         )}
 
-        <button
-          className="btn btn-primary"
-          onClick={upload}
-          disabled={!file || loading}
-          style={{ justifyContent: "center", padding: "0.7rem" }}
-        >
-          {loading ? (
-            <>
-              <span className="spinner" /> Processing…
-            </>
-          ) : (
-            "Upload & Generate Insights"
-          )}
+        <button className="btn btn-primary" onClick={upload} disabled={!file || loading}
+          style={{ justifyContent: "center", padding: "0.7rem" }}>
+          {loading ? <><span className="spinner" /> Processing…</> : "Upload & Generate Insights"}
         </button>
       </div>
     </div>

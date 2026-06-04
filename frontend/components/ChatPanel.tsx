@@ -60,11 +60,15 @@ export default function ChatPanel({ docId }: { docId: string | null }) {
         {messages.map((m, i) => (
           <div key={i} style={{ display: "flex", justifyContent: m.role === "user" ? "flex-end" : "flex-start" }}>
             <div style={{
-              maxWidth: "75%", background: m.role === "user" ? "var(--accent)" : "var(--bg-card)",
+              maxWidth: "85%",
+              background: m.role === "user" ? "var(--accent)" : "var(--bg-card)",
               border: m.role === "assistant" ? "1px solid var(--border)" : "none",
-              borderRadius: "var(--radius)", padding: "0.75rem 1rem",
-              fontSize: "14px", lineHeight: 1.7,
+              borderRadius: "var(--radius)",
+              padding: "0.75rem 1rem",
+              fontSize: "14px",
+              lineHeight: 1.7,
               color: m.role === "user" ? "#fff" : "var(--text-primary)",
+              wordBreak: "break-word",
             }}>
               {m.content}
               {m.sources && m.sources.length > 0 && (
@@ -92,13 +96,22 @@ export default function ChatPanel({ docId }: { docId: string | null }) {
         <div ref={bottomRef} />
       </div>
 
-      <div style={{ display: "flex", gap: "10px", alignItems: "flex-end" }}>
-        <textarea className="textarea" placeholder="Ask a question… (Enter to send, Shift+Enter for new line)"
-          value={input} onChange={e => setInput(e.target.value)}
+      <div style={{ display: "flex", gap: "8px", alignItems: "flex-end", paddingBottom: "env(safe-area-inset-bottom, 0px)" }}>
+        <textarea
+          className="textarea"
+          placeholder="Ask a question… (Enter to send)"
+          value={input}
+          onChange={e => setInput(e.target.value)}
           onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }}
-          rows={2} style={{ flex: 1, resize: "none" }} />
-        <button className="btn btn-primary" onClick={send} disabled={!input.trim() || loading}
-          style={{ padding: "0.7rem 1.25rem", height: "fit-content" }}>
+          rows={2}
+          style={{ flex: 1, resize: "none", fontSize: "14px" }}
+        />
+        <button
+          className="btn btn-primary"
+          onClick={send}
+          disabled={!input.trim() || loading}
+          style={{ padding: "0.7rem 1rem", height: "fit-content", whiteSpace: "nowrap" }}
+        >
           Send
         </button>
       </div>

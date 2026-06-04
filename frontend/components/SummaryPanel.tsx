@@ -41,7 +41,7 @@ export default function SummaryPanel({ docId }: { docId: string | null }) {
   };
 
   return (
-    <div style={{ maxWidth: 680 }}>
+    <div style={{ maxWidth: 680, width: "100%" }}>
       <div className="page-header">
         <h1 className="page-title">Summary</h1>
         <p className="page-subtitle">Generate AI summaries in different styles</p>
@@ -49,15 +49,19 @@ export default function SummaryPanel({ docId }: { docId: string | null }) {
 
       <div style={{ marginBottom: "1.25rem" }}>
         <div style={{ fontSize: "13px", color: "var(--text-muted)", marginBottom: "0.6rem" }}>Summary style</div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "8px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(100px, 1fr))", gap: "8px" }}>
           {TYPES.map(t => (
             <button key={t.value} onClick={() => setType(t.value)} style={{
-              padding: "0.6rem 0.75rem", borderRadius: "var(--radius-sm)",
+              padding: "0.6rem 0.75rem",
+              borderRadius: "var(--radius-sm)",
               border: `1px solid ${type === t.value ? "var(--accent)" : "var(--border)"}`,
               background: type === t.value ? "var(--accent-glow)" : "var(--bg-card)",
               color: type === t.value ? "var(--accent)" : "var(--text-secondary)",
-              fontFamily: "var(--font-body)", fontSize: "13px", cursor: "pointer",
-              textAlign: "left", transition: "all var(--transition)",
+              fontFamily: "var(--font-body)",
+              fontSize: "13px",
+              cursor: "pointer",
+              textAlign: "left",
+              transition: "all var(--transition)",
             }}>
               <div style={{ fontWeight: 500 }}>{t.label}</div>
               <div style={{ fontSize: "11px", opacity: 0.7, marginTop: "2px" }}>{t.desc}</div>
@@ -85,7 +89,7 @@ export default function SummaryPanel({ docId }: { docId: string | null }) {
       )}
 
       {result && (
-        <div className="card" style={{ lineHeight: 1.8, fontSize: "15px", whiteSpace: "pre-wrap" }}>
+        <div className="card" style={{ lineHeight: 1.8, fontSize: "15px", whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
             <span className="badge badge-purple">{TYPES.find(t => t.value === type)?.label}</span>
             <button className="btn btn-ghost" style={{ fontSize: "12px", padding: "4px 10px" }}

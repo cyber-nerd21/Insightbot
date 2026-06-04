@@ -7,7 +7,7 @@ router = APIRouter()
 
 MAX_SIZE = 20 * 1024 * 1024  
 
-@router.post("/upload") 
+@router.post("upload") 
 async def upload_pdf(file: UploadFile = File(...)):
     
     # Size check 

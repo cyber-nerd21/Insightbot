@@ -6,6 +6,7 @@ from services.db import supabase
 
 async def process_document(file_bytes: bytes, doc_id: str):
     text = parse_pdf(file_bytes)
+    text = text.replacec('\x00', '') 
     chunks = chunk_text(text)
     
     embeddings = get_embeddings_batch(chunks)
