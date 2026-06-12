@@ -16,11 +16,11 @@ def parse_pdf(file_bytes: bytes) -> str:
             # Normal text-based page
             full_text += page_text + "\n"
         else:
-            # Image-based page — render to image then OCR
+            # Image-based page  render to image then OCR
             pix = page.get_pixmap(dpi=200)
             img_bytes = pix.tobytes("png")
             image = Image.open(io.BytesIO(img_bytes))
             ocr_text = pytesseract.image_to_string(image)
             full_text += ocr_text + "\n"
 
-    return full_text
+    return full_text  
