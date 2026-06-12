@@ -15,8 +15,15 @@ def get_embeddings(text: str) -> list:
     return response.embeddings[0].values
 
 def get_embeddings_batch(texts: list) -> list:
-    response = client.models.embed_content(
-        model="gemini-embedding-001",
-        contents=texts
-    )
-    return [e.values for e in response.embeddings]
+    all_embeddings = []
+    batch_size = 50  # safe limit for Gemini
+    
+    for i in range(0, len(texts), batch_size):
+        batch = texts[i:i + batch_size]
+        response = client.models.embed_content(
+            model="gemini-embedding-001",
+            contents=batch
+        )
+        all_embeddings.extend([e.values for e in response.embeddings])
+    
+    return all_embeddings
