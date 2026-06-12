@@ -180,6 +180,8 @@ html, body {
     z-index: 50;
     transform: translateX(-100%);
     transition: transform 0.25s ease;
+    width: var(--sidebar-w) !important;
+    min-width: 0 !important;  /* overrides inline min-width from Sidebar.tsx */
   }
 
   .sidebar.open {
